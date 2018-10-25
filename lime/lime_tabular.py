@@ -280,6 +280,11 @@ class LimeTabularExplainer(object):
         ).ravel()
 
         yss = predict_fn(inverse)
+        
+        # Sometimes the syhtnetic datapoints yield NaN probabilities, remove them!
+        nan_mask = np.any(np.isnan(yss), axis=1)
+        yss = yss[~nan_mask]
+        scaled_data = scaled_data[~nan_mask]
 
         # for classification, the model needs to provide a list of tuples - classes
         # along with prediction probabilities
